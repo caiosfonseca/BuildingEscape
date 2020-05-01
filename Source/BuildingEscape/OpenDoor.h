@@ -18,6 +18,12 @@ public:
 
 protected:
 	// Called when the game starts
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+		float TargetYaw = 90.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+        float Velocity = 2.f;
+	
 	virtual void BeginPlay() override;
 
 public:	
@@ -25,8 +31,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	float TargetYaw = 90.f;
-	float Alpha = 0.f;
-	float StartingYaw = 0.f;
+	float CurrentYaw = 0.f;
+	float InitialYaw = 0.f;
 		
 };

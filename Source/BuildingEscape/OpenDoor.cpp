@@ -20,8 +20,9 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-	StartingYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw = StartingYaw + TargetYaw;
+	InitialYaw = GetOwner()->GetActorRotation().Yaw;
+	CurrentYaw = InitialYaw;
+	TargetYaw += InitialYaw;
 }
 
 
@@ -32,12 +33,10 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
 	UE_LOG(LogTemp, Warning, TEXT("%f"), GetOwner()->GetActorRotation().Yaw);
-	Alpha = FMath::Clamp(Alpha + DeltaTime/8.f, 0.f, 1.f);
-	FRotator NewRot{GetOwner()->GetActorRotation()};
-	NewRot.Yaw = FMath::Lerp(GetOwner()->GetActorRotation().Yaw, TargetYaw, Alpha);
-	// If we want linear interpolation instead of Exponential, we have to change the current yaw for StartingYaw	
-	GetOwner()->SetActorRotation(NewRot);
 
-	// ...
+	CurrentYaw = FMath::Lerp(CurrentYaw, TargetYaw, Velocity * DeltaTime);
+	FRotator DoorRotation = GetOwner()->GetActorRotation();
+	DoorRotation.Yaw = CurrentYaw;
+	GetOwner()->SetActorRotation(DoorRotation);
 }
 
