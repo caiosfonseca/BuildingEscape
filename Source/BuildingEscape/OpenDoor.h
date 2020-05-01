@@ -16,6 +16,8 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
+	void OpenDoor(const float DeltaTime);
+
 protected:
 	// Called when the game starts
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
@@ -23,6 +25,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
         float Velocity = 2.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+        class ATriggerVolume* PressurePlate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+		class AActor* ActorThatOpens;
 	
 	virtual void BeginPlay() override;
 
