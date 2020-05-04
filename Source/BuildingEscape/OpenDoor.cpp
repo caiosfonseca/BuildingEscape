@@ -4,6 +4,8 @@
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "Engine/TriggerVolume.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -17,9 +19,15 @@ UOpenDoor::UOpenDoor()
 
 void UOpenDoor::OpenDoor(const float DeltaTime)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
-	// UE_LOG(LogTemp, Warning, TEXT("%f"), GetOwner()->GetActorRotation().Yaw);
-	CurrentYaw = FMath::Lerp(CurrentYaw, TargetYaw, Velocity * DeltaTime);
+	CurrentYaw = FMath::Lerp(CurrentYaw, OpenAngle, DoorOpenSpeed * DeltaTime);
+	FRotator DoorRotation = GetOwner()->GetActorRotation();
+	DoorRotation.Yaw = CurrentYaw;
+	GetOwner()->SetActorRotation(DoorRotation);
+}
+
+void UOpenDoor::CloseDoor(const float DeltaTime)
+{
+	CurrentYaw = FMath::Lerp(CurrentYaw, InitialYaw, DoorCloseSpeed * DeltaTime);
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
@@ -30,10 +38,22 @@ void UOpenDoor::OpenDoor(const float DeltaTime)
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	if(!IsValid(PressurePlate))
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has the Open Door Component in it, but doesn't have any Pressure Plate!"), *GetOwner()->GetName());
+	}
+
+	if(!IsValid(ActorThatOpens))
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has the Open Door Component in it, but doesn't have any Actor that opens it!"), *GetOwner()->GetName());
+	}
 	
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
 	CurrentYaw = InitialYaw;
-	TargetYaw += InitialYaw;
+	OpenAngle += InitialYaw;
 }
 
 
@@ -47,6 +67,14 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 		if(PressurePlate->IsOverlappingActor(ActorThatOpens))
 		{
 			OpenDoor(DeltaTime);
+			DoorLastOpened = GetWorld()->GetTimeSeconds();
+		}
+		else
+		{
+			if(GetWorld()->GetTimeSeconds() > DoorLastOpened + DoorCloseDelay)
+			{
+				CloseDoor(DeltaTime);
+			}			
 		}
 	}
 }

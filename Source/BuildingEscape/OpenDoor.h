@@ -18,19 +18,27 @@ public:
 
 	void OpenDoor(const float DeltaTime);
 
+	void CloseDoor(const float DeltaTime);
+
 protected:
 	// Called when the game starts
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
-		float TargetYaw = 90.f;
+		float OpenAngle = 90.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
-        float Velocity = 2.f;
+        float DoorOpenSpeed = 1.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
         class ATriggerVolume* PressurePlate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
 		class AActor* ActorThatOpens;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+		float DoorCloseDelay = 2.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+        float DoorCloseSpeed = 2.f;
 	
 	virtual void BeginPlay() override;
 
@@ -41,5 +49,6 @@ public:
 private:
 	float CurrentYaw = 0.f;
 	float InitialYaw = 0.f;
+	float DoorLastOpened = 0.f;
 		
 };
