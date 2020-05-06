@@ -20,25 +20,30 @@ public:
 
 	void CloseDoor(const float DeltaTime);
 
+	float TotalMassOfActors() const;
+
 protected:
 	// Called when the game starts
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control Variables")
 		float OpenAngle = 90.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control Variables")
         float DoorOpenSpeed = 1.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actors")
         class ATriggerVolume* PressurePlate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actors")
 		class AActor* ActorThatOpens;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control Variables")
 		float DoorCloseDelay = 2.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Yaw")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control Variables")
         float DoorCloseSpeed = 2.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control Variables")
+		float MassToOpenDoors = 50.f;
 	
 	virtual void BeginPlay() override;
 
